@@ -14,6 +14,7 @@ public class Main {
             System.out.println("i = " + i);
             int BINEEBAAA ;
             int c1 ;
+            int c2 ;
         }
     }
 }
