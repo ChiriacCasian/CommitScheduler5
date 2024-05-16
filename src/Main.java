@@ -13,11 +13,7 @@ public class Main {
             // for you, but you can always add more by pressing Ctrl+F8.
             System.out.println("i = " + i);
             int BINEEBAAA ;
-            int c1 ;
-            int c2 ;
-            int c3 ;
-            int c4 ;
-            int c5 ;
+            long c5 ;
         }
     }
 }
