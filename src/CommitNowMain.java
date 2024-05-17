@@ -7,8 +7,11 @@ import java.util.Properties;
 public class CommitNowMain {
     private static String remoteBranchName ;
     private static String localBranchName ;
+    private static String pat_token ;
+    private static String ssh_key ;
     public static void main(String[] args) throws IOException {
         getProperties() ;
+        checkProtocol() ;
         String freshestCommit ;
         String oldestCommit ;
         oldestCommit = getOldestUnpushedCommit();
@@ -21,6 +24,45 @@ public class CommitNowMain {
         push() ;
         setHeadToSha1(freshestCommit);
     }
+
+    private static void checkProtocol() throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "config", "--get", "remote."+remoteBranchName +".url") ;
+
+        processBuilder.command(command) ;
+        Process process = processBuilder.start();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String remoteLink = reader.readLine() ;
+        if(remoteLink.startsWith("https")){
+            /// either switch to ssh, or use PAT token to authenticate http remote communication
+            /// if PAT token is provided in the properties file, use it to authenticate
+            if(pat_token == null){
+                System.out.println("You are using http protocol but no authentication token provided, exiting");
+                System.out.println("Please provide a PAT token in the application.properties file, or switch to ssh protocol");
+                return ;
+            }
+            /// pat token migh still be wrong, or not have the required permissions
+            if(ssh_key != null){
+                connectToSsh() ;
+                return;
+            }
+            connectToHttp(remoteLink);
+        }
+        /// they are using ssh so everything is fine
+        return ;
+    }
+    private static void connectToSsh() throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "remote", "set-url", remoteBranchName, ssh_key) ;
+        processBuilder.command(command).start() ;
+    }
+    private static void connectToHttp(String remoteLink) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "remote", "set-url", remoteBranchName, remoteLink.replace("https://", "https://"+pat_token+"@")) ;
+        processBuilder.command(command).start() ;
+    }
+
     private static void getProperties() throws IOException {
         Properties properties = new Properties();
         FileInputStream in = new FileInputStream("src/application.properties");
@@ -28,6 +70,8 @@ public class CommitNowMain {
         in.close();
         remoteBranchName = properties.getProperty("remote_branch_name");
         localBranchName = properties.getProperty("local_branch_name");
+        pat_token = properties.getProperty("PAT_token");
+        ssh_key = properties.getProperty("ssh_key");
     }
     private static void push() throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
