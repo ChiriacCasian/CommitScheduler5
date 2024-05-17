@@ -14,7 +14,7 @@ public class CommitNowMain {
         checkProtocol() ;
         int commitStackSize = commitStackSizeCalculator() ;
         if(commitStackSize == 0){
-            System.out.println("Nothing to push, branch up to date");
+            System.out.println("Nothing to push, branch up to date"); /// asdfdsaf
             return ;
         }
         String freshestCommit ;
