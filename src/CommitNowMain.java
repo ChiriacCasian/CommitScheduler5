@@ -9,7 +9,7 @@ public class CommitNowMain {
     private static String localBranchName ;
     private static String pat_token ;
     private static String ssh_key ;
-    public static void main(String[] args) throws IOException { ////12345
+    public static void main(String[] args) throws IOException { ////1234567
         getProperties() ;
         checkProtocol() ;
 //        int commitStackSize = commitStackSizeCalculator() ;
@@ -21,13 +21,14 @@ public class CommitNowMain {
         String oldestCommit ;
         oldestCommit = getOldestUnpushedCommit();
         freshestCommit = getFreshestCommit();
+        System.out.println(oldestCommit + " " + freshestCommit);
         if(freshestCommit == null || oldestCommit == null){
             System.out.println("One of the commits is null");
             return ;
         }
         setHeadToSha1(getOldestUnpushedCommit());
         push() ;
-//        setHeadToSha1(freshestCommit);
+        setHeadToSha1(freshestCommit);
 //        System.out.println(commitStackSize + ": " + commitStackSizeCalculator());
 //        if(commitStackSizeCalculator() == commitStackSize){
 //            System.out.println("Push failed, please check your ssh_key and/or PAT token and try again");
