@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         //String command = "git log --oneline" ;
         //String command = "git log --pretty=format:\"%H %s\"";
-        List<String> command = Arrays.asList("git", "log", "--pretty=format:%H %s");
+        List<String> command = Arrays.asList("git", "log", "--graph", "--pretty=format:%H %s");
         ProcessBuilder processBuilder = new ProcessBuilder();
         //processBuilder.command("bash", "-c", command);
         processBuilder.command(command);
@@ -21,13 +21,15 @@ public class Main {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = reader.readLine()) != null) {
+            System.out.println(line);
             String[] parts = line.split(" ");
-            System.out.println("This is tha sha1 " + parts[0] + " : this the commit " + parts[1]);
+            //System.out.println("This is tha sha1 " + parts[0] + " : this the commit " + parts[1]);
         }
 
         // Wait for the process to complete
         int exitCode = process.waitFor();
         System.out.println("\nExited with code : " + exitCode);
-        int c9 ;int c10 ;int c11;
+        int c9 ;int c10 ;int c11;int c12 ;
     }
+
 }
