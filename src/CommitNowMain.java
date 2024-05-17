@@ -26,7 +26,7 @@ public class CommitNowMain {
             System.out.println("One of the commits is null");
             return ;
         }
-        setHeadToSha1(getOldestUnpushedCommit());
+        setHeadToSha1(oldestCommit);
         push() ;
         setHeadToSha1(freshestCommit);
 //        System.out.println(commitStackSize + ": " + commitStackSizeCalculator());
