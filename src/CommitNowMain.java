@@ -58,7 +58,7 @@ public class CommitNowMain {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String remoteLink = reader.readLine() ;
-        if(remoteLink.startsWith("https://github.com")){
+        if(remoteLink.startsWith("https://github.com") || changedToken(remoteLink)){
             /// otherwise it means either ssh is configured, or PAT token is provided
             /// either switch to ssh, or use PAT token to authenticate http remote communication
             /// if PAT token is provided in the properties file, use it to authenticate
@@ -84,10 +84,25 @@ public class CommitNowMain {
     }
     private static void connectToHttp(String remoteLink) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        List<String> command = Arrays.asList("git", "remote", "set-url", remoteBranchName, remoteLink.replace("https://", "https://"+pat_token+"@")) ;
+        List<String> command ;
+        if(!changedToken(remoteLink))
+            command = Arrays.asList("git", "remote", "set-url", remoteBranchName, remoteLink.replace("https://", "https://"+pat_token+"@")) ;
+        else {
+            remoteLink += "/" ;
+            String[] oldRemoteLinkComposition = remoteLink.split("/") ;
+            String newRemoteLink = "" ;
+            for(int i = 0; i < oldRemoteLinkComposition.length ; i++){
+                if(i != 2)newRemoteLink += oldRemoteLinkComposition[i] + "/" ;
+                    else newRemoteLink += pat_token + "@github.com" + "/" ;
+            }
+            newRemoteLink = newRemoteLink.substring(0, newRemoteLink.length() - 1) ;
+            command = Arrays.asList("git", "remote", "set-url", remoteBranchName, newRemoteLink);
+        }
         processBuilder.command(command).start() ;
     }
-
+    private static boolean changedToken(String remoteLink) {
+        return pat_token != null && !remoteLink.contains(pat_token) ;
+    }
     private static void getProperties() throws IOException {
         Properties properties = new Properties();
         FileInputStream in = new FileInputStream("src/application.properties");
