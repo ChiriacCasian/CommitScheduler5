@@ -9,7 +9,7 @@ public class CommitNowMain {
     private static String localBranchName ;
     private static String pat_token ;
     private static String ssh_key ;
-    public static void main(String[] args) throws IOException { //// cevaaaaaaAAAAAfasd
+    public static void main(String[] args) throws IOException { //// cevaaaaaaAAAAAfasddsfdf
         getProperties() ;
         checkProtocol() ;
         int commitStackSize = commitStackSizeCalculator() ;
