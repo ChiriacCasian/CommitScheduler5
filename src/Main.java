@@ -28,6 +28,6 @@ public class Main {
         // Wait for the process to complete
         int exitCode = process.waitFor();
         System.out.println("\nExited with code : " + exitCode);
-        int c9 ;int c10 ;
+        int c9 ;int c10 ;int c11;
     }
 }
