@@ -11,6 +11,9 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         //String command = "git log --oneline" ;
         //String command = "git log --pretty=format:\"%H %s\"";
+        System.out.println(getOldestUnpushedCommit());
+        System.out.println(getFreshestCommit());
+        System.out.println("fsadgasdg\n");
         List<String> command = Arrays.asList("git", "log", "--graph", "--pretty=format:%H %s");
         ProcessBuilder processBuilder = new ProcessBuilder();
         //processBuilder.command("bash", "-c", command);
@@ -31,5 +34,30 @@ public class Main {
         System.out.println("\nExited with code : " + exitCode);
         int c9 ;int c10 ;int c11;int c12 ;int c13 ;
     }
+    /// it returns the oldest unpushed commit
+    private static String getOldestUnpushedCommit() throws IOException {
+        //git log origin/main..main --pretty=format:"%H %s"
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "log", "origin/main..main", "--pretty=format:%H");
+        processBuilder.command(command) ;
+        Process process = processBuilder.start();
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "" ;
+        String rez = "" ;
+        while((line = reader.readLine()) != null){
+            rez = line ;
+        }
+        return rez ;
+    }
+    private static String getFreshestCommit() throws IOException {
+        //git log origin/main..main --pretty=format:"%H %s"
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "log", "origin/main..main", "--pretty=format:%H");
+        processBuilder.command(command) ;
+        Process process = processBuilder.start();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        return reader.readLine() ;
+    }
 }
