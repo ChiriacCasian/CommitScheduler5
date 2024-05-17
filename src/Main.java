@@ -1,19 +1,32 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.ProcessBuilder;
+import java.util.Arrays;
+import java.util.List;
+
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws IOException, InterruptedException {
+        //String command = "git log --oneline" ;
+        //String command = "git log --pretty=format:\"%H %s\"";
+        List<String> command = Arrays.asList("git", "log", "--pretty=format:%H %s");
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        //processBuilder.command("bash", "-c", command);
+        processBuilder.command(command);
+        Process process = processBuilder.start();
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
-
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-            int BINEEBAAA ;
-            long c5 ;
+        // Read the output from the command
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(" ");
+            System.out.println("This is tha sha1 " + parts[0] + " : this the commit " + parts[1]);
         }
+
+        // Wait for the process to complete
+        int exitCode = process.waitFor();
+        System.out.println("\nExited with code : " + exitCode);
     }
 }
