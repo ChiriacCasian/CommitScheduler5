@@ -26,15 +26,13 @@ public class Main {
         FileInputStream in = new FileInputStream("src/application.properties");
         properties.load(in);
         in.close();
-
         remoteBranchName = properties.getProperty("remote_branch_name");
         localBranchName = properties.getProperty("local_branch_name");
     }
-    private static void push() throws IOException {
+    private static void push() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "push", remoteBranchName, localBranchName) ;
         processBuilder.command(command) ;
-        Process process = processBuilder.start();
     }
     private static String getOldestUnpushedCommit() throws IOException {
         //git log origin/main..main --pretty=format:"%H %s"
@@ -63,10 +61,9 @@ public class Main {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         return reader.readLine() ;
     }
-    private static void setHeadToSha1(String sha1) throws IOException {
+    private static void setHeadToSha1(String sha1) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "reset", "--soft", sha1) ;
         processBuilder.command(command) ;
-        Process process = processBuilder.start();
     }
 }
