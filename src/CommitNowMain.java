@@ -12,17 +12,41 @@ public class CommitNowMain {
     public static void main(String[] args) throws IOException {
         getProperties() ;
         checkProtocol() ;
+        int commitStackSize = commitStackSizeCalculator() ;
+        if(commitStackSize == 0){
+            System.out.println("Nothing to push, branch up to date");
+            return ;
+        }
         String freshestCommit ;
         String oldestCommit ;
         oldestCommit = getOldestUnpushedCommit();
         freshestCommit = getFreshestCommit();
         if(freshestCommit == null || oldestCommit == null){
-            System.out.println("Nothing to push, branch up to date");
+            System.out.println("One of the commits is null");
             return ;
         }
         setHeadToSha1(getOldestUnpushedCommit());
         push() ;
         setHeadToSha1(freshestCommit);
+        if(commitStackSizeCalculator() == commitStackSize){
+            System.out.println("Push failed, please check your ssh_key and/or PAT token and try again");
+            return ;
+        }
+    }
+
+    private static int commitStackSizeCalculator() throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "log", remoteBranchName + "/" + localBranchName + ".." +
+                localBranchName, "--pretty=format:%H");
+        processBuilder.command(command) ;
+        Process process = processBuilder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "" ;
+        int rez = 0 ;
+        while((line = reader.readLine()) != null){
+            rez ++ ;
+        }
+        return rez ;
     }
 
     private static void checkProtocol() throws IOException {
@@ -34,7 +58,8 @@ public class CommitNowMain {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String remoteLink = reader.readLine() ;
-        if(remoteLink.startsWith("https")){
+        if(remoteLink.startsWith("https://github.com")){
+            /// otherwise it means either ssh is configured, or PAT token is provided
             /// either switch to ssh, or use PAT token to authenticate http remote communication
             /// if PAT token is provided in the properties file, use it to authenticate
             if(pat_token == null){
