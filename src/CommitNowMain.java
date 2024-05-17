@@ -9,7 +9,7 @@ public class CommitNowMain {
     private static String localBranchName ;
     private static String pat_token ;
     private static String ssh_key ;
-    public static void main(String[] args) throws IOException { ////123456
+    public static void main(String[] args) throws IOException {
         getProperties() ;
         checkProtocol() ;
 //        int commitStackSize = commitStackSizeCalculator() ;
@@ -23,7 +23,7 @@ public class CommitNowMain {
         freshestCommit = getFreshestCommit();
         System.out.println(oldestCommit + " " + freshestCommit);
 
-        System.out.println(1233);
+        System.out.println(1233);///123
         if(freshestCommit == null || oldestCommit == null){
             System.out.println("One of the commits is null");
             return ;
