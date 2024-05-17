@@ -149,9 +149,25 @@ public class CommitNowMain {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         return reader.readLine() ;
     }
+    private static void runCommand(String command) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(command.split(" "));
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private static void setHeadToSha1(String sha1) throws IOException {
+        runCommand("git rev-parse HEAD");
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "reset", "--soft", sha1) ;
         processBuilder.command(command).start() ;
+        runCommand("git rev-parse HEAD");
     }
 }
