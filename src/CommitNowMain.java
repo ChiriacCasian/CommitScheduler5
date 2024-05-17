@@ -23,7 +23,7 @@ public class CommitNowMain {
         freshestCommit = getFreshestCommit();
         System.out.println(oldestCommit + " " + freshestCommit);
 
-        System.out.println(1233);///123
+        System.out.println(1233);///1234
         if(freshestCommit == null || oldestCommit == null){
             System.out.println("One of the commits is null");
             return ;
