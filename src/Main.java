@@ -21,7 +21,6 @@ public class Main {
         push() ;
         setHeadToSha1(freshestCommit);
     }
-
     private static void getProperties() throws IOException {
         Properties properties = new Properties();
         FileInputStream in = new FileInputStream("src/application.properties");
@@ -31,15 +30,12 @@ public class Main {
         remoteBranchName = properties.getProperty("remote_branch_name");
         localBranchName = properties.getProperty("local_branch_name");
     }
-
     private static void push() throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "push", remoteBranchName, localBranchName) ;
         processBuilder.command(command) ;
         Process process = processBuilder.start();
     }
-
-    /// it returns the oldest unpushed commit
     private static String getOldestUnpushedCommit() throws IOException {
         //git log origin/main..main --pretty=format:"%H %s"
         ProcessBuilder processBuilder = new ProcessBuilder();
