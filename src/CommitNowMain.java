@@ -7,7 +7,7 @@ import java.util.Properties;
 public class CommitNowMain {
     private static String remoteBranchName ;
     private static String localBranchName ;
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         getProperties() ;
         String freshestCommit ;
         String oldestCommit ;
@@ -32,8 +32,7 @@ public class CommitNowMain {
     private static void push() throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "push", remoteBranchName, localBranchName) ;
-        processBuilder.command(command) ;
-        Process process = processBuilder.start();
+        processBuilder.command(command).start() ;
     }
     private static String getOldestUnpushedCommit() throws IOException {
         //git log origin/main..main --pretty=format:"%H %s"
@@ -65,7 +64,6 @@ public class CommitNowMain {
     private static void setHeadToSha1(String sha1) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "reset", "--soft", sha1) ;
-        processBuilder.command(command) ;
-        Process process = processBuilder.start();
+        processBuilder.command(command).start() ;
     }
 }
