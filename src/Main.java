@@ -9,31 +9,26 @@ import java.util.List;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-        //String command = "git log --oneline" ;
-        //String command = "git log --pretty=format:\"%H %s\"";
-        System.out.println(getOldestUnpushedCommit());
-        System.out.println(getFreshestCommit());
-        System.out.println("fsadgasdg\n");
-        List<String> command = Arrays.asList("git", "log", "--graph", "--pretty=format:%H %s");
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        //processBuilder.command("bash", "-c", command);
-        processBuilder.command(command);
-        Process process = processBuilder.start();
-
-        // Read the output from the command
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-            String[] parts = line.split(" ");
-            //System.out.println("This is tha sha1 " + parts[0] + " : this the commit " + parts[1]);
+        String freshestCommit ;
+        String oldestCommit ;
+        System.out.println(oldestCommit = getOldestUnpushedCommit());
+        System.out.println(freshestCommit = getFreshestCommit());
+        if(freshestCommit == null || oldestCommit == null || freshestCommit.equals(oldestCommit)){
+            System.out.println("Nothing to push, branch up to date");
+            return ;
         }
-
-        // Wait for the process to complete
-        int exitCode = process.waitFor();
-        System.out.println("\nExited with code : " + exitCode);
-        int c9 ;int c10 ;int c11;int c12 ;int c13 ;
+        setHeadToSha1(getOldestUnpushedCommit());
+        push() ;
+        setHeadToSha1(freshestCommit);
     }
+
+    private static void push() throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "push", "origin", "main") ;
+        processBuilder.command(command) ;
+        Process process = processBuilder.start();
+    }
+
     /// it returns the oldest unpushed commit
     private static String getOldestUnpushedCommit() throws IOException {
         //git log origin/main..main --pretty=format:"%H %s"
@@ -44,7 +39,7 @@ public class Main {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = "" ;
-        String rez = "" ;
+        String rez = null ;
         while((line = reader.readLine()) != null){
             rez = line ;
         }
@@ -59,5 +54,11 @@ public class Main {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         return reader.readLine() ;
+    }
+    private static void setHeadToSha1(String sha1) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        List<String> command = Arrays.asList("git", "reset", "--soft", sha1) ;
+        processBuilder.command(command) ;
+        Process process = processBuilder.start();
     }
 }
