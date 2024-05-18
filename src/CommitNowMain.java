@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class CommitNowMain {///1234455
+public class CommitNowMain {///
     private static String remoteBranchName ;
     private static String localBranchName ;
     private static String pat_token ;
