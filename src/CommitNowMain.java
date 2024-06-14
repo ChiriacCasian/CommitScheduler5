@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class CommitNowMain {///12345124
+public class CommitNowMain {///123
     private static String remoteBranchName ;
     private static String localBranchName ;
     private static String pat_token ;
     private static String ssh_key ;
-    public static void main(String[] args) throws IOException {//fdsa
+    public static void main(String[] args) throws IOException {//
         getProperties() ;
         checkProtocol() ;
 //        int commitStackSize = commitStackSizeCalculator() ;
